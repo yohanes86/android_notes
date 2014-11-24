@@ -5,10 +5,11 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="21" />
 
     <application
+        android:name="com.myproject.notes.InitialiazeApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -16,11 +17,23 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
+            
+            <meta-data android:name="android.support.UI_OPTIONS"
+   						 android:value="splitActionBarWhenNarrow" />
+            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.myproject.notes.FillNotes"
+            android:label="@string/app_name" >
+        </activity>
+         <activity
+            android:name="com.myproject.notes.Exiter"
+            android:label="@string/app_name" >
         </activity>
     </application>
 
