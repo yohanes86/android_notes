@@ -25,10 +25,10 @@ public class FillNotes extends Activity{
 	
 	private Notes notes;
 	
-	public static final int MENU_ADD = Menu.FIRST + 1;
-	public static final int MENU_EDIT = Menu.FIRST + 2;
-	public static final int MENU_SAVE = Menu.FIRST + 3;
-	public static final int MENU_SETTINGS = Menu.FIRST + 4;
+	public static final int MENU_ADD   		= Menu.FIRST + 1;
+	public static final int MENU_EDIT 		= Menu.FIRST + 2;
+	public static final int MENU_SAVE 		= Menu.FIRST + 3;
+	public static final int MENU_SETTINGS 	= Menu.FIRST + 4;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -136,16 +136,16 @@ public class FillNotes extends Activity{
          try {
         	 if(notes != null){
 		         notes.setTitle(titleNotes);
-		         notes.setContent(CipherUtil.encryptDESede(content.getText().toString(), Constants.PASSWORD));
-//		         notes.setContent(content.getText().toString());
+		         notes.setContent(CipherUtil.encryptDESede(content.getText().toString(), Constants.KEY));
+		         notes.setPassword(Constants.DEFAULT_PASS);
 		         notes.setUpdatedOn(StringUtils.getDateTime(new Date(), Constants.FORMAT_DATE_DB));
 		         notesMapper.updateNotes(notes);
         	 }
         	 else{	        		
 		         Notes notes = new Notes();
 		         notes.setTitle(titleNotes);
-		         notes.setContent(CipherUtil.encryptDESede(content.getText().toString(), Constants.PASSWORD));
-//		         notes.setContent(content.getText().toString());
+		         notes.setContent(CipherUtil.encryptDESede(content.getText().toString(), Constants.KEY));
+		         notes.setPassword(Constants.DEFAULT_PASS);
 		         notes.setCreatedOn(StringUtils.getDateTime(new Date(), Constants.FORMAT_DATE_DB));
 		         notes.setUpdatedOn(StringUtils.getDateTime(new Date(), Constants.FORMAT_DATE_DB));
 		         notesMapper.insertNotes(notes);

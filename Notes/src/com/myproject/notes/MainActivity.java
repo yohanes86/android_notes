@@ -34,10 +34,10 @@ public class MainActivity extends Activity implements OnItemLongClickListener { 
 																				// {
 	private static final String TAG = "MainActivity";
 
-	public static final int MENU_ADD = Menu.FIRST + 1;
-	public static final int MENU_EDIT = Menu.FIRST + 2;
-	public static final int MENU_SAVE = Menu.FIRST + 3;
-	public static final int MENU_SETTINGS = Menu.FIRST + 4;
+	public static final int MENU_ADD 		= Menu.FIRST + 1;
+	public static final int MENU_EDIT 		= Menu.FIRST + 2;
+	public static final int MENU_SAVE 		= Menu.FIRST + 3;
+	public static final int MENU_SETTINGS 	= Menu.FIRST + 4;
 
 	ListView listView;
 	List<RowItem> rowItems;
@@ -127,15 +127,19 @@ public class MainActivity extends Activity implements OnItemLongClickListener { 
 				switch (which) {
 				case 0: //edit
 					 Toast.makeText(MainActivity.this, "Edit: "+ idNotes, Toast.LENGTH_SHORT).show();
-					 String title [] = rowItems.get(indexList).toString().split("\n");
-					 Intent intent = new Intent(getApplicationContext(),FillNotes.class);
-					 intent.putExtra("title", title[0]);
-					 startActivity(intent);
+					 promptsEnterPassword(idNotes, Constants.EDIT);
+					 
+//					 Toast.makeText(MainActivity.this, "Edit: "+ idNotes, Toast.LENGTH_SHORT).show();
+//					 String title [] = rowItems.get(indexList).toString().split("\n");
+//					 Intent intent = new Intent(getApplicationContext(),FillNotes.class);
+//					 intent.putExtra("title", title[0]);
+//					 startActivity(intent);
 					 dialog.dismiss();
 					break;
 				case 1: //delete
 					Toast.makeText(MainActivity.this, "Delete: " + idNotes, Toast.LENGTH_SHORT).show();
-					popUpConfirmDelete(idNotes);
+					promptsEnterPassword(idNotes, Constants.DELETE);
+//					popUpConfirmDelete(idNotes);
 					dialog.dismiss();
 					break;
 				default:
@@ -274,6 +278,77 @@ public class MainActivity extends Activity implements OnItemLongClickListener { 
 
 				} else {
 					Toast.makeText(getApplicationContext(), "Title Empty", Toast.LENGTH_SHORT).show();
+				}
+			}
+		}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				Toast.makeText(getApplicationContext(), "Cancel", Toast.LENGTH_SHORT).show();
+				dialog.cancel();
+			}
+		});
+
+		// create alert dialog
+		AlertDialog alertDialog = alertDialogBuilder.create();
+
+		// show it
+		alertDialog.show();
+	}
+	
+	
+	public void promptsEnterPassword(long idNotes, int varState) {
+		final long idNote = idNotes; 
+		final int state = varState; // 0:edit, 1:delete
+		// get prompts.xml view
+		LayoutInflater li = LayoutInflater.from(MainActivity.this);
+		View promptsView = li.inflate(R.layout.add_password_prompts, null);
+
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+
+		// set prompts.xml to alertdialog builder
+		alertDialogBuilder.setView(promptsView);
+
+		final EditText userInput = (EditText) promptsView.findViewById(R.id.editTextDialogPassword);
+
+		// set dialog message
+		alertDialogBuilder.setCancelable(false).setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				// get input from alert dialog
+				String userInputPassword = userInput.getText().toString();
+				if (!TextUtils.isEmpty(userInputPassword)) {
+//					Toast.makeText(getApplicationContext(), userInputPassword, Toast.LENGTH_SHORT).show();
+
+					// support password
+					NotesMapper notesMapper = new NotesMapper(getApplicationContext());
+					Notes notes = notesMapper.getNotesById(Integer.parseInt(String.valueOf(idNote)));
+					if(notes != null){
+						if(!TextUtils.isEmpty(notes.getPassword())){
+							// user type invalid password
+							if(!notes.getPassword().equals(userInputPassword)){
+								Toast.makeText(getApplicationContext(), "Sorry, Invalid Password!!", Toast.LENGTH_SHORT).show();
+							}
+							else{ // user type valid password
+								if(state == Constants.EDIT){ // edit
+									Intent intent = new Intent(getApplicationContext(),FillNotes.class);
+									intent.putExtra("title", notes.getTitle());
+									startActivity(intent);
+								}
+								else if(state == Constants.DELETE) { // delete
+									popUpConfirmDelete(idNote);
+								}
+								
+							}
+						}
+						else{ // if Notes don't have password
+							Toast.makeText(getApplicationContext(), "Sorry, This Notes don't have Password!!", Toast.LENGTH_SHORT).show();
+						}
+					}
+										
+//					Intent intent = new Intent(getApplicationContext(), FillNotes.class);
+//					intent.putExtra("title", password);
+//					startActivity(intent);
+
+				} else {
+					Toast.makeText(getApplicationContext(), "Password Empty", Toast.LENGTH_SHORT).show();
 				}
 			}
 		}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

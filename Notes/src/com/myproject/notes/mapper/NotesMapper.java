@@ -27,6 +27,7 @@ public class NotesMapper {
 	public static final String COLUMN_NOTES_ID 			= "id";
 	public static final String COLUMN_NOTES_TITLE 		= "title";
 	public static final String COLUMN_NOTES_CONTENT 	= "content";
+	public static final String COLUMN_NOTES_PASSWORD 	= "password";
 	public static final String COLUMN_NOTES_CREATED_ON 	= "created_on";
 	public static final String COLUMN_NOTES_UPDATED_ON 	= "updated_on";
 	
@@ -40,6 +41,7 @@ public class NotesMapper {
 			+ COLUMN_NOTES_ID 		  + " integer PRIMARY KEY , " 
 			+ COLUMN_NOTES_TITLE   	  + " text , " 
 			+ COLUMN_NOTES_CONTENT    + " text , " 
+			+ COLUMN_NOTES_PASSWORD   + " text , " 
 			+ COLUMN_NOTES_CREATED_ON + " DATETIME , "
 			+ COLUMN_NOTES_UPDATED_ON + " DATETIME "
 			+ " );";
@@ -48,6 +50,7 @@ public class NotesMapper {
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_NOTES_TITLE, notes.getTitle());
 		values.put(COLUMN_NOTES_CONTENT, notes.getContent());
+		values.put(COLUMN_NOTES_PASSWORD, notes.getPassword());
 		values.put(COLUMN_NOTES_CREATED_ON, notes.getCreatedOn()); //StringUtils.getDateTime(userData.getCreatedOn())
 		values.put(COLUMN_NOTES_UPDATED_ON, notes.getUpdatedOn());
 		return values;
@@ -167,7 +170,8 @@ public class NotesMapper {
 		Notes notes = new Notes();
 		notes.setId(cursor.getInt(cursor.getColumnIndex(COLUMN_NOTES_ID)));
 		notes.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_NOTES_TITLE)));
-		notes.setContent(CipherUtil.decryptDESede(cursor.getString(cursor.getColumnIndex(COLUMN_NOTES_CONTENT)), Constants.PASSWORD));
+		notes.setContent(CipherUtil.decryptDESede(cursor.getString(cursor.getColumnIndex(COLUMN_NOTES_CONTENT)), Constants.KEY));
+		notes.setPassword(cursor.getString(cursor.getColumnIndex(COLUMN_NOTES_PASSWORD)));
 		notes.setCreatedOn(cursor.getString(cursor.getColumnIndex(COLUMN_NOTES_CREATED_ON)));
 		notes.setUpdatedOn(cursor.getString(cursor.getColumnIndex(COLUMN_NOTES_UPDATED_ON)));
 		return notes;
@@ -177,6 +181,7 @@ public class NotesMapper {
 			COLUMN_NOTES_ID,
 			COLUMN_NOTES_TITLE,
 			COLUMN_NOTES_CONTENT,
+			COLUMN_NOTES_PASSWORD,
 			COLUMN_NOTES_CREATED_ON,
 			COLUMN_NOTES_UPDATED_ON
 	};

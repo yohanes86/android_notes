@@ -4,6 +4,7 @@ public class Notes {
 	private int id;
 	private String title;
 	private String content;
+	private String password;
 	private String createdOn;
 	private String updatedOn;
 	
@@ -36,5 +37,11 @@ public class Notes {
 	}
 	public void setUpdatedOn(String updatedOn) {
 		this.updatedOn = updatedOn;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }
